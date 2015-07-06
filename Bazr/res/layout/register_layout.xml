@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="@dimen/space_layout_padding" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"       
+        android:padding="@dimen/space_layout_padding" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/space_layout_margin"
+            android:orientation="vertical"
+            android:padding="@dimen/space_layout_padding" >
+
+            <TextView
+                android:id="@+id/textView1"
+                style="@style/text_view_header_style"
+                android:text="Sign Up" />
+
+            <EditText
+                android:id="@+id/name"
+                style="@style/edit_text_style"
+                android:layout_marginTop="@dimen/verticalgapcontrols"
+                android:hint="Name"
+                android:imeOptions="actionNext"
+                android:inputType="textCapWords" >
+
+                <requestFocus />
+            </EditText>
+
+            <EditText
+                android:id="@+id/email"
+                style="@style/edit_text_style"
+                android:layout_marginTop="@dimen/verticalgapcontrols"
+                android:hint="Email"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/password"
+                style="@style/edit_text_style"
+                android:layout_marginTop="@dimen/verticalgapcontrols"
+                android:hint="Password"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/number"
+                style="@style/edit_text_style"
+                android:layout_marginTop="@dimen/verticalgapcontrols"
+                android:hint="Contact Number"
+                android:imeOptions="actionNext"
+                android:inputType="phone" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/address"
+                style="@style/edit_text_style"
+                android:height="80dp"
+                android:layout_marginTop="@dimen/verticalgapcontrols"
+                android:hint="Address"
+                android:imeOptions="actionDone"
+                android:maxLines="5"
+                android:minLines="3"
+                android:singleLine="false" />
+
+            <Button
+                android:id="@+id/btn_login"
+                style="@style/btn_style"
+                android:layout_marginTop="@dimen/verticalgapcontrols"
+                android:text="Register" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

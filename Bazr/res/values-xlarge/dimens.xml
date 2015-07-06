@@ -1,0 +1,58 @@
+<resources>
+
+    <!-- Common -->
+
+    <dimen name="lbl_size">18sp</dimen>
+    <dimen name="lbl_size_list_item">17sp</dimen>
+    <dimen name="txt_size_btn">20sp</dimen>
+    <dimen name="menu_padding_small">10dp</dimen>
+    <dimen name="menu_padding_large">20dp</dimen>
+    <dimen name="img_height">96dp</dimen>
+    <dimen name="img_width">96dp</dimen>
+
+    <!-- Infologin activity margin for the layouts -->
+
+    <dimen name="space_layout_margin">20dp</dimen>
+    <dimen name="space_layout_padding">20dp</dimen>
+    <dimen name="space_layout_margin_small">10dp</dimen>
+    <dimen name="space_layout_padding_small">10dp</dimen>
+    <dimen name="verticalgapheading">30dp</dimen>
+    <dimen name="verticalgapcontrols">20dp</dimen>
+    <dimen name="verticalgaplabelandedittext">5dp</dimen>
+    <dimen name="textbox_padding">10dp</dimen>
+    <dimen name="spinnerWidth">100dp</dimen>
+    <dimen name="spinnerHeight">50dp</dimen>
+    <dimen name="txt_icon_width">64dp</dimen>
+    <dimen name="txt_icon_height">64dp</dimen>
+    <dimen name="login_screen_padding">50dp</dimen>
+
+    <!-- Top Menu -->
+
+    <dimen name="lbl_heading_Size_topmenu">22sp</dimen>
+    <dimen name="horizontal_gap_topmenu">30dp</dimen>
+
+    <!-- SubList -->
+
+    <dimen name="img_Statusheight">25dp</dimen>
+    <dimen name="img_Statuswidth">25dp</dimen>
+
+    <!-- Progress Bar AutoComplete -->
+
+    <dimen name="prg_AutoCompleteWidth">96dp</dimen>
+    <dimen name="prg_AutoCompleteHeight">96dp</dimen>
+
+    <!-- Category Adapter Image View Size -->
+
+    <dimen name="category_image_width">150dp</dimen>
+    <dimen name="category_image_height">150dp</dimen>
+
+    <!-- Product Adapter Image View Size -->
+
+    <dimen name="product_item_image_width">100dp</dimen>
+    <dimen name="product_item_image_height">100dp</dimen>
+
+    <!-- Product Detail Image View Size -->
+
+    <dimen name="product_detail_image_size">200dp</dimen>
+
+</resources>

@@ -1,0 +1,405 @@
+<!doctype html>
+ 
+<html>
+ 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>MobFox Integration Guide</title>
+</head>
+ 
+<body>
+    <h1>MobFox Android SDK Integration Guide</h1>
+    <p>
+    The following document provide detailed instructions on how to integrate the MobFox Android SDK into your Android projects. The MobFox SDK is capable of displaying traditional Banner Ads, MRAID Ads and Fullscreen Ads- videos or static interstitials.
+	</p>
+    <h2>Step 1: Set Up your Application at the MobFox Dashboard</h2>
+	<p>
+		<ul>
+			<li>Log into your MobFox account or sign up <a href="http://www.mobfox.com/signup">here</a></li>
+			<li>At the MobFox Dashboard navigate to "Sites & Apps"</li>
+			<li>Click on "Create New Site/App" and enter the details</li>
+			<li>Once created you will be provided with a unique Publisher ID</li>
+		</ul>
+	</p>
+    <h2>Step 2: Download the SDK</h2>
+	<p>
+		The downloaded ZIP contains the following files:
+		<ul>
+			<li>The SDK Framework: AdSdk_6.0.8.jar</li>
+			<li>The library for parsing XML, used for VAST Video Ads: simple-xml-2.7.1.jar</li>
+			<li>Folder with Demo Application "AdSdk_Demo"</li>
+			<li>Folder with second Demo Application "AdSdk_XML_Demo"</li>
+		</ul>
+	</p>
+	<h2>Add the SDK to your project</h2>
+	<p>
+		<ul>
+			<li>
+				Copy the MobFox Framework (AdSdk_6.0.8.jar) and SimpleXML (simple-xml-2.7.1.jar) into "libs" folder of your project.<br/>
+				<img src="img/and1.png">
+			</li>
+			<li>
+				Add necessary lines to your AndroidManifest.xml file:
+				<pre>
+&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot; /&gt;
+																			
+&lt;activity
+	android:name=&quot;com.adsdk.sdk.banner.InAppWebView&quot;
+	android:configChanges=&quot;keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize&quot; /&gt;
+&lt;activity
+	android:name=&quot;com.adsdk.sdk.video.RichMediaActivity&quot;
+	android:configChanges=&quot;keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize&quot;	
+	android:hardwareAccelerated=&quot;false&quot; /&gt;
+&lt;activity		
+	android:name=&quot;com.adsdk.sdk.mraid.MraidBrowser&quot;
+	android:configChanges=&quot;keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize&quot; /&gt;
+				</pre>
+				<img src="img/and2.png"><br/>
+				Note that LOCATION permission is optional. It is used for accessing location data to provide better targetted ads.
+				
+			</li>
+			<li>
+				You will also need to set up the <a href="http://developer.android.com/google/play-services/setup.html">Google Play Services SDK</a> for your project. It is necessary for identification purposes, and with appropriate settings on your MobFox account it also allows for serving AdMob ads.
+			</li>
+		</ul>
+	</p>
+	<h2>Request and display Banner Ads</h2>
+	<ol>
+		<li>To manually create and display banner in your activity:
+			<ul>
+				<li>Add the following lines, entering your Publisher ID:
+					<pre>
+mAdView = new AdView(this, "http://my.mobfox.com/request.php","ENTER_PUBLISHER_ID_HERE", true, true);
+
+mAdView.setAdListener(this);
+layout.addView(mAdView);
+
+					</pre>
+				</li>
+				<li>Alternatively, you can add the banner in your layout XML. See AdSdk_XML_Demo to learn more.
+				</li>
+				<li>Optional: Set custom size for banner placement
+					<pre>
+mAdView.setAdspaceWidth(320); //optional, used to set the custom size of banner placement. Without setting it, the SDK will use default sizes.
+mAdView.setAdspaceHeight(50);  
+mAdView.setAdspaceStrict(false); //optional, tells the server to only supply banners that are exactly of desired size. Without setting it, the server could also supply smaller Ads when no ad of desired size is available.
+					</pre>
+					<img src="img/and3.png"><br/>
+				</li>
+				<li>Optional: Add sending demographic data to server for better ad targetting. You can send a list of keywords (interests), user's age and gender.
+					<pre>
+ArrayList<String> keywords = new ArrayList<String>();
+keywords.add("sports");
+keywords.add("football");
+mAdView.setKeywords(keywords); //optional, to send list of keywords (user interests) to ad server.
+mAdView.setUserAge(18); //optional, sends user's age
+mAdView.setUserGender(Gender.MALE); //optional, sends user's gender
+					</pre>
+			</ul>
+		</li>
+		<li>
+			See also the Demo Application for more reference.
+		</li>
+	</ol>
+	<h2>Request and display MobFox Fullscreen Ads</h2>
+	MobFox allows for displaying two kinds of fullscreen ads: Video Ads and static interstitial ads. To implement them, follow the steps below:
+	<ol>
+		<li>
+			Add the following lines, entering your Publisher ID:
+			<pre>
+mManager = new AdManager(this,"http://my.mobfox.com/request.php",
+				"ENTER_PUBLISHER_ID_HERE", true);
+mManager.setListener(this);
+mManager.requestAd();
+			</pre>
+		</li>
+		<li>
+			Optional: Set which ads you want to display. You can choose to display static interstitials, video ads, or allow both. By default, only static interstitials are enabled. If both kinds are enabled, you can also tell the SDK to prioritize Video Ads. In such case, static interstitials will only be loaded if there is no Video Ad available. To maximise the revenue, it is advised to enable Video Ads and give them higher priority.
+			<pre>
+mManager.setInterstitialAdsEnabled(true); //enabled by default. Allows the SDK to request static interstitial ads.
+mManager.setVideoAdsEnabled(true); //disabled by default. Allows the SDK to request video fullscreen ads.
+mManager.setPrioritizeVideoAds(true); //disabled by default. If enabled, indicates that SDK should request video ads first, and only if there is no video request a static interstitial (if they are enabled).
+			</pre>
+		</li>
+		<li>
+			Optional: You can also send demographic data to server for better ad targetting. The procedure for doing it is the same as for Banner Ads.
+		</li>
+		<img src="img/and4.png"><br/>
+		<li>
+			To show the fullscreen ad:
+			<pre>
+mManager.showAd();				
+			</pre>
+			It is advised to call this method when listener method adLoadSucceeded() is called. <br/>
+		</li>
+		<li>
+			See also the Demo Application for more reference.
+		</li>
+	</ol>
+	
+	<h2>Done!</h2>
+	<p>
+		You should be able to see test ads now. Once you are ready to receive live ads, please log into your MobFox Account, navigate to "Sites & Apps" and click on "Request Activation". We will review and activate your app for live ads within 24 hours. Note: Please always clear memory before showing Ads and restore your apps orientation after an Ad is shown. If you would like to test your SDK integration with one of our Test Publisher IDs, please click <a href="http://help.mobfox.com/customer/portal/articles/781978">here</a>.
+	</p>
+	
+	<h2>Release information</h2>
+	<p>	
+		New features in this release:
+	</p>
+		<ul>
+			<li>
+				SDK now supports more custom events for all ad sizes- banners, fullscreen ads and even native ads.
+			</li>
+		</ul>
+		
+	<h2>Explanation of methods</h2>
+The Banner Ad constructor argument "Location" lets the SDK use the current location for better targeting Ads. "Animation" enables transition animations between Banner Ads:
+<pre>	AdView(Context, "http://my.mobfox.com/request.php","PUBLISHER_ID", Location, Animation)</pre>
+The Fullscreen Ad constructor argument "Location" lets the SDK use the current location for better targeting Ads.
+<pre>	AdManager(this,"http://my.mobfox.com/request.php", "http://my.mobfox.com/vrequest.php",
+				"PUBLISHER_ID", true)</pre>
+Once a new Ad has been loaded, the following AdListener method will be called:
+<pre>	public void adLoadSucceeded(Ad advertisement)</pre>
+If the Ad couldn't load, the following AdListener method will be called:
+<pre>	public void noAdFound(Ad advertisement)</pre>
+For vAds, you will be notified when the vAd activity has finished
+<pre>	public void adClosed(Ad advertisement, boolean completed)</pre>
+You will also be notified when the vAd activity starts
+<pre>	public void adShown(Ad advertisement, boolean succeeded)</pre>
+
+<h2>Custom events</h2>
+The MobFox SDK allows you to display ads also from other ad networks with the use of Custom Events. To utilize them you need to make appropriate settings in your MobFox account and add the SDKs (usually provided as .jar files or library projects) of your chosen ad networks. The process of adding your chosen ad network SDK to your project is the same as you would use to add them without mediation, just without making any changes in the Java code of your application. Remember to also modify youe AndroidManifest.xml file according to integration instructions of your chosen SDK. Currently, the following custom events are available in the SDK:
+<ul>
+	<li>Banners</li>
+	<ul> 
+		<li>AdMob - integrated in Google Play Services</li>
+		<li><a href="https://developers.facebook.com/docs/audience-network">Facebook Audience NetworkM</a></li>
+		<li><a href="https://www.inmobi.com/support/integration/">InMobi</a></li>
+		<li><a href="http://docs.millennialmedia.com/">Millennial</a></li>
+		<li><a href="http://www.mopub.com/resources/">MoPub</a></li>
+		<li><a href="http://support.flurry.com/index.php?title=Analytics/GettingStarted">Flurry (requires both FlurryAds and FlurryAnalytics .jar files)</a></li>	
+	</ul>
+	<li>Fullscreen ads</li>
+	<ul> 
+		<li>AdMob - integrated in Google Play Services</li>
+		<li><a href="https://developers.facebook.com/docs/audience-network">Facebook Audience NetworkM</a></li>
+		<li><a href="https://www.inmobi.com/support/integration/">InMobi</a></li>
+		<li><a href="http://docs.millennialmedia.com/">Millennial</a></li>
+		<li><a href="http://www.mopub.com/resources/">MoPub</a></li>
+		<li><a href="http://support.flurry.com/index.php?title=Analytics/GettingStarted">Flurry (requires both FlurryAds and FlurryAnalytics .jar files)</a></li>
+		<li><a href="http://www.vungle.com/products/vungle-sdk/">Vungle</a></li>
+		<li><a href="https://github.com/AdColony/">AdColony</a></li>
+		<li><a href="https://answers.chartboost.com/hc/en-us/sections/200532626-SDK-Integrations">Chartboost</a></li>
+		<li><a href="http://unityads.unity3d.com/help/Documentation%20for%20Publishers/Downloads">Applifier (UnityAds)</a></li>	
+	</ul>
+	<li>Native ads</li>
+	<ul>
+		<li><a href="https://developers.facebook.com/docs/audience-network">Facebook Audience NetworkM</a></li>
+		<li><a href="https://www.inmobi.com/support/integration/">InMobi</a></li>
+		<li><a href="http://www.mopub.com/resources/">MoPub</a></li>
+	</ul>	
+</ul>
+
+If you want to implement more custom events, please take a look at the "Advanced: implementing own custom events" chapter.
+
+<h2>Advanced: integrating Native Ads</h2>
+<p>Native ads allow you to easily design the layout of ads yourself, to make them feel and look like your original content.</p>
+<h3>Requesting native ad</h3>
+<ol>
+<li>Prepare the Native Ad Manager:
+<pre>
+nativeAdManager = new NativeAdManager(this, "http://my.mobfox.com/request.php", true, "ENTER_PUBLISHER_ID_HERE", this, adTypes);
+</pre>
+adTypes is a list limiting allowed ad types (<a href="http://dev.mobfox.com/index.php?title=Ad_Request_API_-_Native#Request_Parameters">see n_type parameter here</a>). You can skip this parameter passing null.</br>	
+<img src="img/and5.png">
+</li>
+<li>
+Optionally, you can send demographic data to server for better ad targetting. The procedure for doing it is the same as for Banner Ads or Interstitials.
+</li>
+<li>Implement the NativeAdListener methods:
+	<pre>
+- public void adLoaded(NativeAd ad) - called when the Native Ad is successfully loaded.
+
+- public void adFailedToLoad() - called when the SDK cannot fetch a Native Ad, possibly no ad is available on server.
+
+- public void impression() - called when the Native Ad is shown for the first time.
+
+- public void adClicked() - called when the user clicks the Native Ad.
+	</pre>
+	
+</li>
+<li>
+	Request the Native Ad:
+	<pre>
+nativeAdManager.requestAd();
+	</pre>
+</li>
+</ol>
+<h3>Rendering Native Ad</h3>
+<ol>
+	<li>Prepare new Android XML Layout File for Native Ads
+		<p>Create new layout with TextViews to hold TextAssets and ImageViews to hold ImageAssets. If you want to display stars rating within the ad, add also the RatingBar. To learn more about available Assets, please see <a href="http://dev.mobfox.com/index.php?title=Ad_Request_API_-_Native#Supported_Image_Types">here</a>.</p></li>
+	<li>
+	To bind assets to views, you need to create NativeViewBinder. You should use .bindTextAsset method for binding TextAssets to TextViews and .bindImageAsset to bind ImageAssets to ImageViews. Please note also that "rating" TextAsset is special and should be bound to RatingBar. 
+	<pre>
+bigNativeAdBinder = new NativeViewBinder(R.layout.native_ad_layout);
+bigNativeAdBinder.bindTextAsset("headline", R.id.headlineView);
+bigNativeAdBinder.bindTextAsset("description", R.id.descriptionView);
+bigNativeAdBinder.bindImageAsset("icon", R.id.iconView);
+bigNativeAdBinder.bindImageAsset("main", R.id.mainImageView);
+bigNativeAdBinder.bindTextAsset("rating", R.id.ratingBar);
+	</pre>
+	<img src="img/and6.png">
+	</li>
+	<li>
+	Create View based on Native Ad response you have obtained in adLoaded(NativeAd ad) listener method and your View inder object.
+	<pre>
+bigNativeAdView = nativeAdManager.getNativeAdView(nativeAd, bigNativeAdBinder);
+	</pre>
+	<img src="img/and7.png">
+	</li>
+</ol>
+<h3>Rendering Native Ads in List Views</h3>
+<ol>
+	<li>
+		Create instance of BaseAdapterUtil, indicating the intended position of first ad in the feed and the frequency of ads :
+		<pre>
+baseAdapterUtil = new BaseAdapterUtil(3, 5);
+		</pre>
+	</li>
+	<li>
+		You will need to override some Adapter methods to include ads in your feed:
+		<ul>
+		<li>
+			public int getCount() - you must add the number of ads to your original number of items. You can use BaseAdapterUtil to calculate this number:
+			<pre>
+@Override
+public int getCount() {
+	int originalCount = super.getCount();
+	return baseAdapterUtil.calculateShiftedCount(originalCount);
+}
+			</pre>
+		</li>	
+		<li>
+			public int getViewTypeCount() - increment the original number to indicate additional view type for native ads has been added.
+			<pre>
+@Override
+public int getViewTypeCount() {
+	int originalCount = super.getViewTypeCount();
+	return originalCount + 1; // +1 for native ad view type.
+}
+			</pre>
+		</li>
+		<li>
+			public int getItemViewType(int position) - specify the positions where native ads are placed. In simple case, you can do it like:
+			<pre>
+@Override
+public int getItemViewType(int position) {
+	if (baseAdapterUtil.isAdPosition(position)) {
+		return getViewTypeCount() - 1; // to return native ad view as last type.
+	} else {
+		return super.getItemViewType(position); // return your original view type. If you need position index, use shifted position obtained by baseAdapterUtil.calculateShiftedPosition(originalPosition)
+	}
+}
+			</pre>
+		</li>
+		<li>
+			public T getItem(int position) - account for the fact that ads are displayed in the feed. You will most likely need to calculate shifted position:
+			<pre>
+@Override
+public String getItem(int position) {
+	int shiftedPosition = baseAdapterUtil.calculateShiftedPosition(position);
+	return super.getItem(shiftedPosition);
+}
+			</pre>
+		</li>
+		<li>
+			public View getView(int position, View convertView, ViewGroup parent)- return Native Ad View for appropriate positions
+			<pre>
+@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (baseAdapterUtil.isAdPosition(position)) {
+				
+				// return native ad view
+				
+			} else {
+				return super.getView(position, convertView, parent); //return original view
+			}
+		}
+			</pre>
+		</li>
+		
+		</ul>
+	</li>
+</ol>
+<h3>Good practices</h3>
+<ul>
+	<li>Avoid unnecessary ad requests.
+		<p>Only request native ads when they are likely to be seen by the user. If your list view has many rows, initially it is not necessary to request ads that would be displayed near the bottom. You might want to keep a small queue with Native Ads to be able to display them quickly when the user scrolls down your list view.</p></li>
+		<li>Don't recreate Native Ad Views when user scrolls back the list view.
+			<p>Instead of creating Native Ad View every time getView() should return ad, it is better to save each created Native Ad view and reuse it when user scrolls back.</p></li>
+</ul>
+<img src="img/and8.png"></br>
+See also the Native Ads Demo project to see an example how Native Ads can be implemented.
+
+<h2>Advanced: implementing own custom events</h2>
+<p>The SDK comes with a set of custom events implemented. If you want to add support for some other ad network, you can fork the SDK and add needed classes yourself. Take a look at package com.adsdk.sdk.customevents and use the already implemented custom events as a reference. All you need to do is implement classes for your custom event (banner, fullscreen or both) and set everything accordingly in your MobFox account.</p>
+<h3>Implementing custom event banner</h3>
+To start with, the name of the class for your custom event banner must be like "AdNetworkNameBanner". The "Banner" part of the name is obligatory, it is required by mechanism choosing the apropriate class for given network name. Your class also has to extend CustomEventBanner class. You will need to override <pre>public void loadBanner(Context context, CustomEventBannerListener customEventBannerListener, String optionalParameters, String trackingPixel, int width, int height)</pre> method. In it, you will have to call 
+<pre>
+listener = customEventBannerListener;
+this.trackingPixel = trackingPixel;
+</pre> 
+and create banner view of your chosen ad network. If it requires some kind of id/ad key, you can use optionalParameters string for passing this data. All that is left is calling of appropriate listener methods:
+<pre>
+void onBannerLoaded(View bannerView)- called after successful banner load, passing the banner view of your chosen ad network.
+       
+void onBannerFailed()- called when the banner fails to load.
+
+void onBannerExpanded()- called when the banner expands or opens fullscreen view, usually after click.
+
+void onBannerClosed()- called when the ad closes.
+</pre>
+Remember to also call <pre>reportImpression()</pre> method when the banner is shown. In most cases, the place where you call onBannerLoaded will be good. You may also want to override the <pre>destroy()</pre>method (remember to also call <pre>super.destroy()</pre>method). With this, your custom event banner implementation is done.
+<h3>Implementing custom event fullscreen</h3>
+Implementing the fullscreen custom event is very similar to custom event banner. It will also need a properly named class, like "AdNetworkNameFullscreen". Your class also has to extend CustomEventFullscreen class, and override <pre>public void loadFullscreen(Activity activity, CustomEventFullscreenListener customEventFullscreenListener, String optionalParameters, String trackingPixel) </pre>method. There, you will need to call
+<pre>
+listener = customEventFullscreenListener;
+this.trackingPixel = trackingPixel;
+</pre> 
+and load interstitial ad of your chosen ad network. If it requires some kind of id/ad key, you can use optionalParameters string for passing this data. You will also need to override <pre>public void showFullscreen()</pre> method, showing the loaded interstitial. All that is left is calling of appropriate listener methods:
+<pre>
+void onFullscreenLoaded(CustomEventFullscreen fullscreen) -called when ad is successfully loaded, passing your custom event fullscreen class.
+void onFullscreenFailed() -called when fullscreen fails to load.
+void onFullscreenOpened() -called when the fullscreen ad is opened.
+void onFullscreenClosed() -called when the fullscreen ad is closed.
+void onFullscreenLeftApplication() -called when the fullscreen ad leaves application, usually after click.
+</pre>
+Also remember to call <pre>reportImpression()</pre> method when the ad is shown. In most cases the place in the code where you call onFullscreenOpened will be fine. You may also want to override the <pre>finish()</pre>method (remember to also call <pre>super.finish()</pre>method) that will be called when this fullscreen ad is no longer necessary. And this is it, no other steps are required to implement custom event fullscreen.
+
+
+<h3>Implementing custom event native ad</h3>
+Implementing the custom event native ad is also similar to implementing custom event banner or fullscreen. It will also need a properly named class, like "AdNetworkNameNative". Your class also has to extend CustomEventNative class, and override <pre>public void createNativeAd(final Context context, CustomEventNativeListener listener, final String optionalParameters, String trackingPixel)</pre>method. There, you will need to call
+<pre>
+this.listener = listener;
+addImpressionTracker(trackingPixel);
+</pre> 
+and load native ad of your chosen ad network. If it requires some kind of id/ad key, you can use optionalParameters string for passing this data. When the native ad of your chosen ad network is received, you will need to match its assets to MobFox native ad assets (like headline text asset or icon image asset). For conveniece you can use the following methods:
+<pre>addTextAsset(String type, String asset)</pre>
+<pre>addImageAsset(String type, String url)</pre>
+along with the list of MobFox native ad assets provided in NativeAd class. When you are finished, use the method
+<pre>isNativeAdValid(NativeAd ad)</pre>
+to check if the ad was properly loaded and all required assets are available.
+You will also need to call appropriate listener methods:
+<pre>
+void onCustomEventNativeLoaded(NativeAd customNativeAd) -called when ad is successfully loaded, passing your custom event native class.
+void onCustomEventNativeFailed() -called when fullscreen fails to load or isNativeAdValid method returns false.
+</pre>
+You may also want to override the <pre>handleClick()</pre> and <pre>prepareImpression(View view)</pre> methods, if your chosen SDK requires it. With this implementation is finished, no other steps are required to implement custom event native ad.
+
+
+</body>
+ 
+</html>

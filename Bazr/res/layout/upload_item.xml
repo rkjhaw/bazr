@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blue"
+            android:orientation="vertical"
+            android:padding="1dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="true"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_layout_padding" >
+
+                    <ImageView
+                        android:id="@+id/uploaded_image"
+                        android:layout_width="@dimen/category_image_width"
+                        android:layout_height="@dimen/category_image_height"
+                        android:background="@null"
+                        android:src="@drawable/img_missing" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_layout_padding_small" >
+
+                    <TextView
+                        android:id="@+id/camera_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/browse"
+                        android:layout_width="@dimen/img_width"
+                        android:layout_height="@dimen/img_width"
+                        android:background="@drawable/gallery" />
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_layout_padding_small"
+                        android:text="OR"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/camera"
+                        android:layout_width="@dimen/img_width"
+                        android:layout_height="@dimen/img_width"
+                        android:background="@drawable/camera" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/selected_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_layout_margin_small"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="@dimen/lbl_size"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_layout_padding"
+            android:paddingLeft="@dimen/space_layout_padding"
+            android:paddingRight="@dimen/space_layout_padding"
+            android:paddingTop="@dimen/space_layout_padding" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_layout_margin_small"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:gravity="right|center_vertical"
+                    android:paddingRight="15dp"
+                    android:text="Category"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/edit_text_size"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/category_spinner"
+                    style="@style/spinner_style_product_upload" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/verticalgapcontrols"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/textView_subcategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:gravity="right|center_vertical"
+                    android:paddingRight="15dp"
+                    android:text="Sub Category"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/edit_text_size"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/sub_category_spinner"
+                    style="@style/spinner_style_product_upload" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edtxt_product_name"
+                style="@style/edit_text_style"
+                android:hint="Product Name"
+                android:inputType="textCapWords" >
+
+                <requestFocus />
+            </EditText>
+
+            <EditText
+                android:id="@+id/edtxt_product_price"
+                style="@style/edit_text_style"
+                android:hint="Product Price"
+                android:inputType="number" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/edtxt_product_location"
+                style="@style/edit_text_style"
+                android:background="@drawable/rounded_edtxt_corner_white"
+                android:hint="Location"
+                android:maxLines="5"
+                android:minLines="3"
+                android:singleLine="false" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/edtxt_product_pname"
+                style="@style/edit_text_style"
+                android:hint="Contact Person"
+                android:inputType="textCapWords" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/edtxt_product_email"
+                style="@style/edit_text_style"
+                android:hint="Email" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/edtxt_product_number"
+                style="@style/edit_text_style"
+                android:hint="Contact No"
+                android:inputType="phone" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/edtxt_product_description"
+                style="@style/edit_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="Description"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="3"
+                android:singleLine="false"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/upload"
+                style="@style/btn_style"
+                android:layout_marginTop="@dimen/verticalgapcontrols"
+                android:drawableRight="@drawable/ic_action_forward"
+                android:text="Upload" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

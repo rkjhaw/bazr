@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/filter_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        android:orientation="horizontal"
+        android:weightSum="3" >
+
+        <Spinner
+            android:id="@+id/category_spinner"
+            style="@style/spinner_style_product_list" />
+
+        <Spinner
+            android:id="@+id/distance_spinner"
+            style="@style/spinner_style_product_list" />
+
+        <Spinner
+            android:id="@+id/price_spinner"
+            style="@style/spinner_style_product_list" />
+    </LinearLayout>
+
+    <View style="@style/divider_style" />
+    
+    <ListView
+        android:id="@+id/product_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/blue"        
+        android:dividerHeight="0.5dp" >
+    </ListView>
+
+</LinearLayout>

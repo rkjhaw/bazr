@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/image_view_product_list_item"
+        android:layout_width="@dimen/product_item_image_width"
+        android:layout_height="@dimen/product_item_image_height"              
+        android:background="@drawable/rounded_corner_white"        
+        android:scaleType="fitXY"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/laptop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/space_layout_padding_small"
+        android:paddingRight="@dimen/space_layout_padding_small" >
+
+        <TextView
+            android:id="@+id/textview_product_list_name"
+            style="@style/text_view_product_item"
+            android:textSize="@dimen/lbl_size"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/textview_product_list_price"
+            style="@style/text_view_product_item" />
+
+        <TextView
+            android:id="@+id/textview_product_list_distance"
+            style="@style/text_view_product_item"
+            android:text="0 km" />
+
+        <TextView
+            android:id="@+id/textview_product_list_description"
+            style="@style/text_view_product_item"
+            android:text="dfdfdf" />
+
+        <TextView
+            android:id="@+id/textview_product_list_date"
+            style="@style/text_view_product_item"
+            android:text="5 Days ago" />
+    </LinearLayout>
+
+</LinearLayout>

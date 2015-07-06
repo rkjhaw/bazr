@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BazR</string>
+    <string name="app_version">BazR V 1.0</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="msg_no_wifi">Please turn on your Network Connection.</string>
+    <string name="msg_no_internet">No internet connection available,try again!</string>
+    
+    <string name="msg_login_success">Login Success</string>    
+    <string name="msg_blank_id">Please enter email id or contact number</string>  
+    <string name="msg_blank_password">Please enter password</string>
+    <string name="msg_blank_confirmpassword">Please enter confirm password </string>
+    <string name="msg_blank_passunmatch">Your password and confirmation password do not match.</string>
+    <string name="msg_blank_name">Please enter name.</string>
+    <string name="msg_blank_email">Please enter email address.</string>
+    <string name="msg_valid_email">Please enter valid email address.</string>
+    <string name="msg_blank_contactno">Please enter contact number.</string>
+   
+    <string name="msg_unexpected_login_error">Sorry Could not Log You In. Please try again</string>  
+    <string name="msg_unexpected_error">Sorry not able to process your request. Please try again</string> 
+    <string name="msg_failed_to_connect_Server">Failed to connect to server.</string> 
+    <string name="msg_wait_gps"> Please Wait till GPS get your location.</string>
+    
+    <string name="lbl_description">Description : </string>
+    
+  
+
+</resources>

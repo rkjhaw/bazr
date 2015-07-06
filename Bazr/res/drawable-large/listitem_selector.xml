@@ -1,0 +1,10 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Normal state. -->
+    <item android:drawable="@color/color_nav_list" android:state_pressed="false" android:state_selected="false"/>
+    <!-- pressed state. -->
+    <item android:drawable="@color/color_nav_list_selected" android:state_pressed="true"/>
+    <!-- Selected state. -->
+    <item android:drawable="@color/color_nav_list_selected" android:state_pressed="false" android:state_selected="true"/>
+
+</selector>

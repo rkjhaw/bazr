@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/space_layout_padding"
+    tools:context="com.keshima.bazr.MainActivity" >
+
+    <TextView
+        android:id="@+id/textView1"        
+        android:text="HYPER LOCAL MOBILE C2C MARKETPLACE"
+        style="@style/text_view_header_style" />
+
+    <GridView
+        android:id="@+id/category_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_layout_margin"       
+        android:horizontalSpacing="@dimen/space_layout_margin"
+        android:numColumns="2"
+        android:verticalSpacing="@dimen/space_layout_margin" >
+    </GridView>
+
+</LinearLayout>

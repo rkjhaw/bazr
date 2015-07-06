@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="blue">#4c4cff</color>
+    <color name="light_blue">#E0E0FF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light_black">#474444</color>
+    <color name="grey">#747474</color>
+    <color name="green_black">#4d7233</color>
+    <color name="black">#000000</color>
+    <color name="pale_white">#F9F9F9</color>
+    <color name="color_nav_list">#F4F4F4</color>
+    <color name="color_nav_list_selected">#d3d3d3</color>
+    
+    <color name="color_spinner_border">#6699FF</color>
+    
+
+</resources>
