@@ -2,9 +2,12 @@ package model;
 
 import java.util.ArrayList;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
-public class Product {
+public class Product implements Parcelable
+{
 
 	String productId, sellerId, subCategoryI, categoryId, productName,
 			contactPerson, price, location, email, contactNo, description,
@@ -175,6 +178,18 @@ public class Product {
 
 	public double getDistance() {
 		return this.distance;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

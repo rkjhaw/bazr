@@ -170,7 +170,7 @@ public class SignUpFragment extends Fragment implements OnClickListener,SignUp_L
 			nameValuePair.add(new BasicNameValuePair("userType",""));
 			if(myLocation!=null)
 			{
-				nameValuePair.add(new BasicNameValuePair("longitude",Double.toString(myLocation.getLatitude())));
+				nameValuePair.add(new BasicNameValuePair("longitude",Double.toString(myLocation.getLongitude())));
 				nameValuePair.add(new BasicNameValuePair("latitude",Double.toString(myLocation.getLatitude())));
 			}
 											

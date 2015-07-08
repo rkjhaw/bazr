@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.keshima.bazr"
-    android:versionCode="2"
-    android:versionName="01072015" >
+    android:versionCode="5"
+    android:versionName="07082015" >
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -35,7 +35,6 @@
         <activity
             android:name=".FragmentChangeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustResize|stateHidden|"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,20 +52,40 @@
         </activity>
         <activity
             android:name="BaseActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="ProductDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
 
-        <!-- Goolge API Key -->
+        <!-- Facebook Activity -->
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- Facebook Provider -->
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1234"
+            android:exported="true" />
+        <!-- Goolge API Key (old apk key=>> AIzaSyB5SLzJX-rGJcRy6Ovgws9MPyHbuuN7I9g -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAZ4lkD0Q4lQapbU5ZWEEmjXo9P6pkZNBo" />
+            android:value="AIzaSyDGeI_RdNQwJV9jP-9KnmPXwsJFXPV5N9c" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <!-- Facebook App Id -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
     </application>
 
 </manifest>

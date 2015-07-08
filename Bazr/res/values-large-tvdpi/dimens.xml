@@ -2,9 +2,9 @@
 
     <!-- Common -->
 
-    <dimen name="lbl_size">16sp</dimen>
-    <dimen name="lbl_size_list_item">14sp</dimen>
-    <dimen name="txt_size_btn">18sp</dimen>
+    <dimen name="lbl_size">18sp</dimen>
+    <dimen name="lbl_size_list_item">16sp</dimen>
+    <dimen name="txt_size_btn">20sp</dimen>
     <dimen name="menu_padding_small">10dp</dimen>
     <dimen name="menu_padding_large">10dp</dimen>
     <dimen name="img_height">64dp</dimen>
@@ -28,7 +28,7 @@
 
     <!-- Top Menu -->
 
-    <dimen name="lbl_heading_Size_topmenu">22sp</dimen>
+    <dimen name="lbl_heading_Size_topmenu">24sp</dimen>
     <dimen name="horizontal_gap_topmenu">15dp</dimen>
 
     <!-- SubList -->
@@ -48,11 +48,11 @@
     
      <!-- Product Adapter Image View Size -->
 
-    <dimen name="product_item_image_width">150dp</dimen>
-    <dimen name="product_item_image_height">150dp</dimen>
+    <dimen name="product_item_image_width">170dp</dimen>
+    <dimen name="product_item_image_height">170dp</dimen>
     
      <!-- Product Detail Image View Size -->
 
-    <dimen name="product_detail_image_size">200dp</dimen>
+    <dimen name="product_detail_image_size">350dp</dimen>
 
 </resources>

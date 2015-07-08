@@ -46,7 +46,7 @@ public class ProductListFragment extends Fragment implements Products_Listener,
 	public static String category;
 	public static TaskCompleted taskCompletedCallback;
 	public static Product selectedProduct;
-	public static ArrayList<Product> products, filteredProducts;
+	public static ArrayList<Product> products;
 	public static ProductListFragment fragment;
 	Spinner category_spinner, distance_spinner, price_spinner;
 	String[] category_array, distance_array = { "DISTANCE-ALL", "0-3km", "3-5km",
@@ -63,6 +63,9 @@ public class ProductListFragment extends Fragment implements Products_Listener,
 	boolean refreshed;
 	Fragment mFragment;
 	ProductListAdapter adapter;
+	LocationManager locationManager;
+	Criteria criteria;
+	String bestProvider;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -87,9 +90,10 @@ public class ProductListFragment extends Fragment implements Products_Listener,
 		Log.d(MODULE,TAG);
 		
 		View rootView = inflater.inflate(R.layout.activity_product_list,container, false);
-		LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-		Criteria criteria = new Criteria();
-		String bestProvider = locationManager.getBestProvider(criteria, true).trim();
+		locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+		criteria = new Criteria();
+		bestProvider = locationManager.getBestProvider(criteria, true).trim();
+		
 		if(bestProvider!=null)
 		{
 			if(bestProvider.equals(""))
@@ -99,10 +103,10 @@ public class ProductListFragment extends Fragment implements Products_Listener,
 				{
 					onLocationChanged(location);
 				}
+				locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
 			}			
 		}
-		
-		locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
+				
 		category = getArguments().getString("category");
 		productListView = (ListView) rootView.findViewById(R.id.product_list);
 		
@@ -233,6 +237,10 @@ public class ProductListFragment extends Fragment implements Products_Listener,
 	{
 		TAG="filter";
 		Log.d(MODULE,TAG);	
+		
+		//Log.d(MODULE,TAG + " category_filter_position : " + category_filter_position);	
+		//Log.d(MODULE,TAG + " price_filter_position : " + price_filter_position);
+		//Log.d(MODULE,TAG + " dostance_filter_position : " + dostance_filter_position);
 		
 		new LoadProductsFragment(ProductListFragment.this,category, category_filtered,
 				 price_filtered,distance_filtered, category_filter_position,
@@ -402,15 +410,20 @@ public class ProductListFragment extends Fragment implements Products_Listener,
 		
 		Fragment fragment = new MapFragment();
 		FragmentTransaction ft;
+		
 		Bundle bundle = new Bundle();
 		bundle.putString("isComingFrom", "ProductListFragment");
+		bundle.putParcelableArrayList("b_product_list",products);
+		bundle.putParcelableArrayList("b_locations_list",locations);
+		
+		fragment.setArguments(bundle);
+		
 		FragmentManager fm = getFragmentManager();
-		ft = fm.beginTransaction();
-		// ft.hide(getFragmentManager().findFragmentByTag("ProductListFragment"));
+		ft = fm.beginTransaction();		
+		
 		ft.add(R.id.content_frame, fragment);
 		ft.hide(this);
-		ft.addToBackStack("MapFragment");
-		// ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		ft.addToBackStack("MapFragment");		
 		ft.commit();
 	}
 
@@ -487,6 +500,7 @@ public class ProductListFragment extends Fragment implements Products_Listener,
 
 			lt = Double.parseDouble(lat);
 			lg = Double.parseDouble(lon);
+			
 			Location location;
 
 			location = new Location("productLocs");

@@ -1,16 +1,26 @@
 package com.keshima.bazr;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import utils.Utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Base64;
 import android.util.Log;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import fragments.CategoryGridFragment;
@@ -36,6 +46,8 @@ public class FragmentChangeActivity extends BaseActivity
 		TAG="onCreate";
 		Log.d(MODULE,TAG);
 		// set the Above View
+		FacebookSdk.sdkInitialize(getApplicationContext());
+		GetKeyHash();
 		mContent = new CategoryGridFragment();
 		prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 		// set the Above View
@@ -116,6 +128,10 @@ public class FragmentChangeActivity extends BaseActivity
 			Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 			fragment.onActivityResult(requestCode, resultCode, data);
 		}
+		else
+		{
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 
 	}
 
@@ -133,5 +149,35 @@ public class FragmentChangeActivity extends BaseActivity
 	 * 
 	 * return false; }
 	 */
+	
+	public void GetKeyHash()
+	{
+		try 
+		{
+
+			PackageInfo info = getPackageManager().getPackageInfo(getPackageName(),PackageManager.GET_SIGNATURES);
+			for (Signature signature : info.signatures) 
+			{
+				MessageDigest md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				Log.e("KeyHash:",Base64.encodeToString(md.digest(), Base64.DEFAULT));
+			}
+		}
+		catch (NameNotFoundException e) 
+		{
+			Log.e("name not found", e.toString());
+		} 
+		catch (NoSuchAlgorithmException e) 
+		{
+			Log.e("no such an algorithm", e.toString());
+		}
+	}
+	
+	@Override
+	protected void onDestroy() 
+	{
+		super.onDestroy();
+		LoginManager.getInstance().logOut();
+	}
 
 }

@@ -6,17 +6,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.android.volley.toolbox.NetworkImageView;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
+import com.keshima.bazr.AppController;
 import com.keshima.bazr.R;
 
 import model.Category;
 import model.Product;
 import model.ProductImage;
-import utils.ImageLoader;
 import utils.Utils;
 import webservices.TaskCompleted;
 import adapters.ImageAdapter;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,17 +37,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Watson.OnCreateOptionsMenuListener;
 import android.support.v4.app.Watson.OnOptionsItemSelectedListener;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.EventLogTags.Description;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.webkit.WebSettings.TextSize;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,10 +61,12 @@ public class ProductDetailFragment extends Fragment implements TaskCompleted, On
 	ViewPager pager;
 	TextView tv_product_name,tv_price,tv_postedon,tv_distance,tv_description,tv_email,tv_mobileno;
 	Button moreImages0;
-	ImageView imageview_call,imageview_email;
-	ImageLoader imageloader;
+	ImageView imageview_call,imageview_email,imageview_facebook;
 	private String comingFrom;
 	FragmentActivity mActivity;
+	ArrayList<ProductImage> Lst_Images;
+	ImageLoader imageLoader;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -69,6 +79,7 @@ public class ProductDetailFragment extends Fragment implements TaskCompleted, On
 		mActivity = getActivity();
 		
 		setHasOptionsMenu(true);
+		imageLoader = AppController.getInstance().getImageLoader();	
 	}
 
 	@Override
@@ -81,10 +92,10 @@ public class ProductDetailFragment extends Fragment implements TaskCompleted, On
 		View rootView = inflater.inflate(R.layout.product_details, container,false);
 		// id = getIntent().getExtras().getString("product_id");
 		taskCompletedCallback = new ProductDetailFragment();		
-		imageloader = new ImageLoader(getActivity());
 		comingFrom = getArguments().getString("isComingFrom");
 		imageview_call = (ImageView) rootView.findViewById(R.id.imageview_call);
 		imageview_email = (ImageView) rootView.findViewById(R.id.imageview_email);
+		imageview_facebook =(ImageView) rootView.findViewById(R.id.imageview_facebook);
 		
 		if (comingFrom.equalsIgnoreCase("ProductListFragment")) 
 		{
@@ -127,6 +138,9 @@ public class ProductDetailFragment extends Fragment implements TaskCompleted, On
 				case R.id.imageview_email:
 					 sendMail();
 					 break;	
+				case R.id.imageview_facebook:
+					 ShareOnFacebook();
+					 break;	
 				default:
 					 break;
 			}		
@@ -142,7 +156,7 @@ public class ProductDetailFragment extends Fragment implements TaskCompleted, On
 		Log.d(MODULE,TAG);
 		
 		SetProperties();
-		ArrayList<ProductImage> Lst_Images = new ArrayList<ProductImage>();
+		Lst_Images = new ArrayList<ProductImage>();
 		Lst_Images = selectedProduct.getProductImage();
 		ImageAdapter adapter = new ImageAdapter(mActivity,Lst_Images);
 		pager.setAdapter(adapter);
@@ -192,6 +206,7 @@ public class ProductDetailFragment extends Fragment implements TaskCompleted, On
 		
 		imageview_call.setOnClickListener(_OnClickListener);
 		imageview_email.setOnClickListener(_OnClickListener);
+		imageview_facebook.setOnClickListener(_OnClickListener);
 	}
 
 	private void sendMail() 
@@ -238,6 +253,21 @@ public class ProductDetailFragment extends Fragment implements TaskCompleted, On
 
 		Fragment fragment = new MapFragment();
 		FragmentTransaction ft;
+		
+		Bundle bundle = new Bundle();
+		
+		ArrayList<Product> Lst_Products = new ArrayList<Product>();
+		Lst_Products.add(selectedProduct);
+		
+		ArrayList<Location> Lst_Locations = new ArrayList<Location>();
+		Lst_Locations.add( AddLocation());
+		
+		bundle.putString("isComingFrom", "ProductListFragment");
+		bundle.putParcelableArrayList("b_product_list",Lst_Products);
+		bundle.putParcelableArrayList("b_locations_list",Lst_Locations);
+		
+		fragment.setArguments(bundle);
+		
 		FragmentManager fm = getFragmentManager();
 		ft = fm.beginTransaction();		
 		ft.add(R.id.content_frame, fragment);
@@ -246,4 +276,68 @@ public class ProductDetailFragment extends Fragment implements TaskCompleted, On
 		ft.commit();
 	}
 
+	public Location AddLocation()
+	{
+		TAG="AddLocation";
+		Log.d(MODULE,TAG);
+		
+		String adds = selectedProduct.getLocation().toString();
+		
+		Log.d(MODULE,TAG + " - adds : " + adds);
+		
+		String lat, lon;
+		double lt=0.0, lg=0.0;
+		
+		lat = adds.substring(0, adds.indexOf("|||"));
+		lon = adds.substring(lat.length() + 3,adds.indexOf("|||", lat.length() + 3));		
+		
+		Log.d("latit ", lat);
+		Log.d("longit ", lon);		
+		
+		try
+		{
+			lt = Double.parseDouble(lat);
+			lg = Double.parseDouble(lon);
+		}
+
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		Location location;
+
+		location = new Location("productLocs");
+		location.setLatitude(lt);
+		location.setLongitude(lg);
+		
+		return location;
+	}
+	
+	public void ShareOnFacebook()
+	{
+		String Str_ImgUrl = Lst_Images.get(0).getImagePath();
+		ImageLoader imageLoader = AppController.getInstance().getImageLoader();	
+		if(imageLoader!=null) imageLoader.get(Str_ImgUrl, imageListener);	
+		
+	}
+	
+	ImageListener imageListener = new ImageListener()
+	{		
+		@Override
+		public void onErrorResponse(VolleyError arg0) 
+		{
+						
+		}
+		
+		@Override
+		public void onResponse(ImageContainer response, boolean arg1) 
+		{
+			SharePhoto photo = new SharePhoto.Builder().setBitmap(response.getBitmap()).build();
+			SharePhotoContent content = new SharePhotoContent.Builder()
+	        .addPhoto(photo)
+	        .build();
+			ShareDialog.show(mActivity, content);
+		}
+	};
 }

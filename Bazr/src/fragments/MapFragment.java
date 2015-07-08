@@ -47,10 +47,11 @@ public class MapFragment extends SherlockFragment implements LocationListener,On
 	MapView mMapView;
 	private GoogleMap googleMap;
 	private MarkerOptions currentMarker;
-	private MarkerOptions marker;
-	ArrayList<Location> locations;
+	ArrayList<Location> Lst_Locations;
 	ArrayList<MarkerOptions> markers;
 	public static Product selectedProduct;
+	ArrayList<Product>  Lst_Products;
+	Bundle Args;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -61,8 +62,10 @@ public class MapFragment extends SherlockFragment implements LocationListener,On
 		Log.d(MODULE,TAG);
 		
 		setHasOptionsMenu(true);
-		locations = ProductListFragment.locations;
+		
 		markers = new ArrayList<MarkerOptions>();
+		Lst_Locations = new ArrayList<Location>();
+		Lst_Products = new ArrayList<Product>();
 	}
 
 	@Override
@@ -85,9 +88,36 @@ public class MapFragment extends SherlockFragment implements LocationListener,On
 		}
 
 		googleMap = mMapView.getMap();
+		
+		return v;
+	}
+
+	
+	@Override
+	public void onStart() 
+	{
+		super.onStart();
+		
+		TAG="onStart";
+		Log.d(MODULE,TAG);
+		
+		Args = getArguments();
+		if(Args!=null)
+		{
+			this.Lst_Products = Args.getParcelableArrayList("b_product_list");
+			this.Lst_Locations = Args.getParcelableArrayList("b_locations_list");
+			Log.d(MODULE,TAG + " Lst_Products size >>>> " + Lst_Products.size());
+			Log.d(MODULE,TAG + " Lst_Locations size >>>> " + Lst_Locations.size());
+		}
+		SetMapProperties();
+	}
+	
+	public void SetMapProperties()
+	{
+		
 		// latitude and longitude
-		double latitude = 17.385044;
-		double longitude = 78.486671;
+		//double latitude = 17.385044;
+		//double longitude = 78.486671;
 		googleMap.setOnMarkerClickListener(this);
 		googleMap.setMyLocationEnabled(true);
 		// create marker
@@ -101,8 +131,9 @@ public class MapFragment extends SherlockFragment implements LocationListener,On
 			{
 				onLocationChanged(location);
 			}
+			locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
 		}		
-		locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
+			
 		Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 		Bitmap bmp = Bitmap.createBitmap(80, 80, conf);
 		Canvas canvas1 = new Canvas(bmp);
@@ -116,27 +147,26 @@ public class MapFragment extends SherlockFragment implements LocationListener,On
 		// modify canvas
 		canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),	R.drawable.pointer), 0, 0, color);
 		canvas1.drawText("User Name!", 30, 30, color);
-		for (int i = 0; i < ProductListFragment.products.size(); i++) 
+		
+		for (int i = 0; i < Lst_Products.size(); i++) 
 		{
-
-			MarkerOptions prodMarker = new MarkerOptions().position(new LatLng(locations.get(i).getLatitude(),locations.get(i).getLongitude()))
-					.title(ProductListFragment.products.get(i).getProductId())
-					.anchor(0.5f, 1);
+			MarkerOptions prodMarker = new MarkerOptions();
+			prodMarker.position(new LatLng(Lst_Locations.get(i).getLatitude(),Lst_Locations.get(i).getLongitude()));
+			prodMarker.title(Lst_Products.get(i).getProductId());
+			prodMarker.anchor(0.5f, 1);
 			prodMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
 			// prodMarker.icon(BitmapDescriptorFactory.fromBitmap(bmp));
 			markers.add(prodMarker);
 			googleMap.addMarker(markers.get(i));
 		}
-
-		if (locations.size() > 0) 
+		if (Lst_Locations.size() > 0) 
 		{
-			CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(locations.get(0).getLatitude(),locations.get(0).getLongitude())).zoom(6).build();
+			CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(Lst_Locations.get(0).getLatitude(),Lst_Locations.get(0).getLongitude())).zoom(15).build();
 			googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 		}
-		
-		return v;
+				
 	}
-
+	
 	@Override
 	public void onResume() 
 	{
@@ -192,14 +222,14 @@ public class MapFragment extends SherlockFragment implements LocationListener,On
 
 		googleMap.clear();
 		LatLng latLng = new LatLng(latitude, longitude);
-		currentMarker = new MarkerOptions().position(latLng).title("I am here");
+		currentMarker = new MarkerOptions().position(latLng);
 
 		currentMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
 
 		googleMap.addMarker(currentMarker).showInfoWindow();
 		Log.d(MODULE, TAG + " Marker size is : " + markers.size());
-		Log.d(MODULE, TAG + " locations size is : " + locations.size());
-		for (int i = 0; i < locations.size(); i++) 
+		Log.d(MODULE, TAG + " locations size is : " + Lst_Locations.size());
+		for (int i = 0; i < Lst_Locations.size(); i++) 
 		{
 
 			/*
@@ -217,7 +247,7 @@ public class MapFragment extends SherlockFragment implements LocationListener,On
 			 * markers.add(prodMarker);
 			 */
 			
-			if (markers.size() > 0 && (markers.size() == (locations.size())))
+			if (markers.size() > 0 && (markers.size() == (Lst_Locations.size())))
 				googleMap.addMarker(markers.get(i)).showInfoWindow();
 		}
 		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -256,27 +286,30 @@ public class MapFragment extends SherlockFragment implements LocationListener,On
 		boolean isClickedCorrectly = false;
 
 		String id = m.getTitle();
+		
+		int mClickedPos=0;
 
 		for (int i = 0; i < markers.size(); i++)
 		{
-			if (ProductListFragment.products.get(i).getProductId().equals(id)) 
+			if (Lst_Products.get(i).getProductId().equals(id)) 
 			{
-				selectedProduct = ProductListFragment.products.get(i);
+				mClickedPos=i;
+				selectedProduct = Lst_Products.get(i);
 				isClickedCorrectly = true;
 				break;
 			}
 		}
-		if (isClickedCorrectly)	moveToProductDetailFragment();
+		if (isClickedCorrectly)	moveToProductDetailFragment(mClickedPos);
 		else Utils.showAlert(getActivity(),	"Please choose the customer's location");
 		return true;
 	}
 
-	private void moveToProductDetailFragment() 
+	private void moveToProductDetailFragment(int mClickedPos) 
 	{
 		TAG="moveToProductDetailFragment";
 		Log.d(MODULE,TAG);
 		
-		ProductDetailFragment.selectedProduct = ProductListFragment.products.get(0);
+		ProductDetailFragment.selectedProduct = Lst_Products.get(mClickedPos);
 		Fragment fragment = new ProductDetailFragment();
 		Bundle bundle = new Bundle();
 		bundle.putString("isComingFrom", "MapFragment");

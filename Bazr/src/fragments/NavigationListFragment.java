@@ -14,6 +14,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.facebook.login.LoginManager;
 import com.keshima.bazr.FragmentChangeActivity;
 import com.keshima.bazr.R;
 
@@ -114,12 +115,13 @@ public class NavigationListFragment extends Fragment implements	OnItemClickListe
 				 break;
 
 			case "Logout":
-				 FragmentChangeActivity.prefs.edit().putBoolean("loginned", false).commit();
-				 Toast.makeText(getActivity(), "Logout Successfully",Toast.LENGTH_LONG).show();
-				 loginned = false;
-				 menus = menuNotLoginned;
-				 naviagtionList.setAdapter(new NavigationListAdapter(getActivity(),menus));
-				break;
+				  FragmentChangeActivity.prefs.edit().putBoolean("loginned", false).commit();
+				  LoginManager.getInstance().logOut();
+				  Toast.makeText(getActivity(), "Logout Successfully",Toast.LENGTH_LONG).show();
+				  loginned = false;
+				  menus = menuNotLoginned;
+				  naviagtionList.setAdapter(new NavigationListAdapter(getActivity(),menus));
+				  break;
 
 			default:
 				break;

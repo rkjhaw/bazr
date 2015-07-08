@@ -54,6 +54,6 @@
     
     <!-- Product Detail Image View Size -->
 
-    <dimen name="product_detail_image_size">200dp</dimen>
+    <dimen name="product_detail_image_size">250dp</dimen>
 
 </resources>
